@@ -4,48 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper Game</title>
+    <title>SassemKwizzt Mijnenveger</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpeg" href="./img/favicon.JPG">
 </head>
 
 <body>
     <div class="container">
         <div class="header-section">
             <img src="./img/logo.png" alt="SassemKwizzt Logo" class="logo">
-            <h1>Minesweeper</h1>
+            <h1>SassemKwizzt Mijnenveger</h1>
         </div>
 
         <div class="player-section" id="playerSection">
             <div class="player-input">
-                <input type="text" id="playerName" placeholder="Enter your name" maxlength="50">
-                <button id="setNameBtn" class="btn btn-primary">Play</button>
+                <input type="text" id="playerName" placeholder="Vul hier je teamnummer in" maxlength="50">
+                <button id="setNameBtn" class="btn btn-primary">Speel</button>
             </div>
             <span class="player-status" id="playerStatus"></span>
         </div>
 
-        <div class="stats">
+        <div id="instructionsSection" class="instructions-section">
+            <h2>Hoe speel je Mijnenveger?</h2>
+            <p><strong>Doel:</strong> Klik op alle veilige vakjes zonder op een mijn te klikken.</p>
+            <ul>
+                <li><strong>Linker muisknop:</strong> Onthul een vakje</li>
+                <li><strong>Rechter muisknop:</strong> Plaats of verwijder een vlag</li>
+                <li>De nummers geven aan hoeveel mijnen er in de 8 aangrenzende vakken liggen</li>
+                <li>Gebruik logica om te bepalen welke vakjes veilig zijn</li>
+                <li>Win door alle veilige vakjes te onthullen</li>
+            </ul>
+        </div>
+
+        <div id="gameSection" class="stats" style="display: none;">
             <div class="stat-item">
-                <label>Time Elapsed:</label>
+                <label>Tijd:</label>
                 <span id="timer">0:00</span>
             </div>
             <div class="stat-item">
-                <label>Mines Left:</label>
-                <span id="minesLeft">10</span>
+                <label>Mijnen over:</label>
+                <span id="minesLeft">65</span>
             </div>
             <div class="stat-item">
-                <label>Game Status:</label>
-                <span id="status">Playing</span>
+                <label>Spel Status:</label>
+                <span id="status">Actief</span>
             </div>
         </div>
 
-        <div class="controls">
-            <button id="newGameBtn" class="btn btn-primary">New Game</button>
+        <div id="controlsSection" class="controls" style="display: none;">
+            <button id="newGameBtn" class="btn btn-primary">Nieuw Spel</button>
         </div>
 
         <div id="gameBoard" class="game-board"></div>
 
         <div class="score-history">
-            <h2>Global Leaderboard</h2>
+            <h2>Scorebord</h2>
             <ul id="scoreList">
                 <li>Loading scores...</li>
             </ul>

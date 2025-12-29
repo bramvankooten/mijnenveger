@@ -129,6 +129,35 @@ h2 {
     align-items: center;
 }
 
+.instructions-section {
+    background: #f0f8ff;
+    border-left: 4px solid #55dff8;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
+.instructions-section h2 {
+    color: #9b0302;
+    margin-bottom: 15px;
+}
+
+.instructions-section p {
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.instructions-section ul {
+    margin-left: 20px;
+    color: #333;
+    line-height: 1.8;
+}
+
+.instructions-section li {
+    margin-bottom: 8px;
+}
+
 .difficulty {
     display: flex;
     gap: 10px;

@@ -1,5 +1,5 @@
 // Game configuration
-const GAME_CONFIG = { rows: 20, cols: 20, mines: 20 };
+const GAME_CONFIG = { rows: 20, cols: 20, mines: 65 };
 
 // Supabase client
 let supabaseClient = null;
@@ -55,7 +55,7 @@ function setPlayerName(playerName) {
     const playerStatus = document.getElementById('playerStatus');
 
     if (!playerName.trim()) {
-        playerStatus.textContent = 'Please enter your name';
+        playerStatus.textContent = 'Vul je naam in';
         playerStatus.style.color = '#dc3545';
         return;
     }
@@ -63,7 +63,7 @@ function setPlayerName(playerName) {
     gameState.playerName = playerName.trim();
 
     // Update UI
-    playerStatus.textContent = `Playing as: ${gameState.playerName}`;
+    playerStatus.textContent = `Teamnummer: ${gameState.playerName}`;
     playerStatus.style.color = '#28a745';
 
     const setNameBtn = document.getElementById('setNameBtn');
@@ -71,9 +71,14 @@ function setPlayerName(playerName) {
     setNameBtn.style.display = 'none';
     playerNameInput.style.display = 'none';
 
+    // Hide instructions and show game sections
+    document.getElementById('instructionsSection').style.display = 'none';
+    document.getElementById('gameSection').style.display = 'grid';
+    document.getElementById('controlsSection').style.display = 'flex';
+
     const changeNameBtn = document.createElement('button');
     changeNameBtn.className = 'btn btn-secondary';
-    changeNameBtn.textContent = 'Change Name';
+    changeNameBtn.textContent = 'Wijzig nummer';
     changeNameBtn.addEventListener('click', changeName);
     document.getElementById('playerSection').appendChild(changeNameBtn);
 
@@ -101,8 +106,16 @@ function changeName() {
         changeNameBtn.remove();
     }
 
-    document.getElementById('gameBoard').innerHTML = '';
+    // Show instructions and hide game sections
+    document.getElementById('instructionsSection').style.display = 'block';
+    document.getElementById('gameSection').style.display = 'none';
+    document.getElementById('controlsSection').style.display = 'none';
+
+    // Clear the board
+    const gameBoard = document.getElementById('gameBoard');
+    gameBoard.innerHTML = '';
 }
+
 // Load global scores from Supabase
 async function loadScores() {
     if (!supabaseClient) {
@@ -123,13 +136,27 @@ async function loadScores() {
             console.warn('Error loading scores:', error);
             gameState.scores = JSON.parse(localStorage.getItem('minesweeperGlobalScores') || '[]');
         } else {
-            gameState.scores = (data || []).map(score => ({
+            // Map scores and filter to keep only fastest for each player
+            const allScores = (data || []).map(score => ({
                 playerName: score.player_name,
                 time: score.time_seconds,
                 timeString: formatTime(score.time_seconds),
                 difficulty: '20x20',
                 date: new Date(score.date).toLocaleDateString()
             }));
+
+            // Create a map to track fastest score per player
+            const fastestByPlayer = new Map();
+            allScores.forEach(score => {
+                const existing = fastestByPlayer.get(score.playerName);
+                if (!existing || score.time < existing.time) {
+                    fastestByPlayer.set(score.playerName, score);
+                }
+            });
+
+            // Convert back to array and sort by time
+            gameState.scores = Array.from(fastestByPlayer.values())
+                .sort((a, b) => a.time - b.time);
         }
     } catch (err) {
         console.warn('Error loading scores:', err);
@@ -139,7 +166,7 @@ async function loadScores() {
 function initializeGame() {
     if (!gameState.playerName) {
         const playerStatus = document.getElementById('playerStatus');
-        playerStatus.textContent = 'Please enter your name first';
+        playerStatus.textContent = 'Vul eerst je naam in';
         playerStatus.style.color = '#dc3545';
         return;
     }
@@ -167,8 +194,6 @@ function initializeGame() {
 
 // Create a game session on the server
 async function createGameSession() {
-    if (!gameState.isAuthenticated) return false;
-
     if (!supabaseClient) {
         // Generate a local session ID if Supabase is not available
         gameState.sessionId = 'local_' + Date.now();
@@ -433,14 +458,14 @@ function displayScores() {
     const scoreList = document.getElementById('scoreList');
 
     if (gameState.scores.length === 0) {
-        scoreList.innerHTML = '<li class="no-games">No scores yet</li>';
+        scoreList.innerHTML = '<li class="no-games">Nog geen scores</li>';
         return;
     }
 
     scoreList.innerHTML = gameState.scores
         .map((score, index) => `
             <li>
-                #${index + 1} - <strong>${score.playerName}</strong> - ${score.timeString} (${score.date})
+                #${index + 1} - <strong>Team ${score.playerName}</strong> - ${score.timeString}
             </li>
         `)
         .join('');
@@ -493,13 +518,13 @@ function updateUI() {
 
     const statusElement = document.getElementById('status');
     if (gameState.gameWon) {
-        statusElement.textContent = '🎉 You Won!';
+        statusElement.textContent = '🎉 Gewonnen!';
         statusElement.style.color = '#28a745';
     } else if (gameState.gameOver) {
-        statusElement.textContent = '💥 Game Over';
+        statusElement.textContent = '💥 Verloren';
         statusElement.style.color = '#dc3545';
     } else {
-        statusElement.textContent = 'Playing';
+        statusElement.textContent = 'Actief';
         statusElement.style.color = '#667eea';
     }
 }
