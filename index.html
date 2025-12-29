@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-section">
+            <img src="./img/logo.png" alt="SassemKwizzt Logo" class="logo">
+            <h1>Minesweeper</h1>
+        </div>
+
+        <div class="player-section" id="playerSection">
+            <div class="player-input">
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="50">
+                <button id="setNameBtn" class="btn btn-primary">Play</button>
+            </div>
+            <span class="player-status" id="playerStatus"></span>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <label>Time Elapsed:</label>
+                <span id="timer">0:00</span>
+            </div>
+            <div class="stat-item">
+                <label>Mines Left:</label>
+                <span id="minesLeft">10</span>
+            </div>
+            <div class="stat-item">
+                <label>Game Status:</label>
+                <span id="status">Playing</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="newGameBtn" class="btn btn-primary">New Game</button>
+        </div>
+
+        <div id="gameBoard" class="game-board"></div>
+
+        <div class="score-history">
+            <h2>Global Leaderboard</h2>
+            <ul id="scoreList">
+                <li>Loading scores...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
