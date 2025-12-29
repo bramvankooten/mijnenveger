@@ -16,22 +16,26 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-    
     steps:
       - uses: actions/checkout@v4
       
-      - name: Create config
+      - name: Create config.js with secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           cat > config.js << 'EOF'
           // Supabase Configuration (generated during deployment)
           const SUPABASE_CONFIG = {
-              url: '${{ secrets.SUPABASE_URL }}',
-              anonKey: '${{ secrets.SUPABASE_ANON_KEY }}'
+              url: '${{ env.SUPABASE_URL }}',
+              anonKey: '${{ env.SUPABASE_ANON_KEY }}'
           };
           EOF
+          echo "Config file created:"
+          cat config.js
+          echo ""
+          echo "Files in directory:"
+          ls -la
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
