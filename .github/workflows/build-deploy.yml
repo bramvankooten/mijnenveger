@@ -25,10 +25,13 @@ jobs:
       
       - name: Create config
         run: |
-          echo "const SUPABASE_CONFIG = {
-            url: '${{ secrets.SUPABASE_URL }}',
-            anonKey: '${{ secrets.SUPABASE_ANON_KEY }}'
-          };" > config.js
+          cat > config.js << 'EOF'
+          // Supabase Configuration (generated during deployment)
+          const SUPABASE_CONFIG = {
+              url: '${{ secrets.SUPABASE_URL }}',
+              anonKey: '${{ secrets.SUPABASE_ANON_KEY }}'
+          };
+          EOF
       
       - name: Setup Pages
         uses: actions/configure-pages@v4

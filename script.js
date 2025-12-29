@@ -25,14 +25,28 @@ let gameState = {
 
 // Initialize Supabase
 function initializeSupabase() {
-    if (typeof SUPABASE_CONFIG === 'undefined' || !SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) {
-        console.warn('Supabase config not found. Using local storage only.');
+    // Check if SUPABASE_CONFIG is defined
+    if (typeof SUPABASE_CONFIG === 'undefined') {
+        console.warn('SUPABASE_CONFIG not defined. Ensure config.js is loaded before script.js');
+        return false;
+    }
+
+    // Check if config has valid values
+    if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) {
+        console.warn('Supabase credentials not configured. Using local storage only.');
+        console.log('To use Supabase, update config.js with your credentials.');
         gameState.scores = JSON.parse(localStorage.getItem('minesweeperScores') || '[]');
         return false;
     }
 
-    supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-    return true;
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        console.log('Supabase initialized successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        return false;
+    }
 }
 
 // Login with player name
